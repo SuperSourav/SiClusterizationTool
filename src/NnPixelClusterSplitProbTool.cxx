@@ -114,9 +114,10 @@ namespace InDet
     if (!m_useBeamSpotInfo) beamSpotPosition=Amg::Vector3D(0,0,0);
 
     clock_t t2 = clock();
-    int repeats = 10000
+    int repeats = 10000;
+    std::vector<double> vectorOfProbs;
     for (int s=0; s<repeats; s++){
-      std::vector<double> vectorOfProbs=m_NnClusterizationFactory->estimateNumberOfParticles(origCluster, trackParameters.associatedSurface(), trackParameters);
+      vectorOfProbs=m_NnClusterizationFactory->estimateNumberOfParticles(origCluster, trackParameters.associatedSurface(), trackParameters);
     }
     t2 = clock() - t2;
     std::cout << "~~~~~~~~~~~~~~~~~~~~~~~CLOCK~~~~~~~~~~~> numNN call (w/) trk info: " << ((float)t2 * 1000000)/(repeats*CLOCKS_PER_SEC) << " micro-secs" << std::endl;
