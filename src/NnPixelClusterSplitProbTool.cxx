@@ -20,7 +20,7 @@
 #include "VxVertex/RecVertex.h"
 #include "InDetBeamSpotService/IBeamCondSvc.h"
 
-
+#include <time.h>
 
 namespace InDet
 {
