@@ -113,8 +113,13 @@ namespace InDet
 
     if (!m_useBeamSpotInfo) beamSpotPosition=Amg::Vector3D(0,0,0);
 
-    std::vector<double> vectorOfProbs=m_NnClusterizationFactory->estimateNumberOfParticles(origCluster, trackParameters.associatedSurface(), trackParameters);
-
+    clock_t t2 = clock();
+    int repeats = 10000
+    for (int s=0; s<repeats; s++){
+      std::vector<double> vectorOfProbs=m_NnClusterizationFactory->estimateNumberOfParticles(origCluster, trackParameters.associatedSurface(), trackParameters);
+    }
+    t2 = clock() - t2;
+    std::cout << "~~~~~~~~~~~~~~~~~~~~~~~CLOCK~~~~~~~~~~~> numNN call (w/) trk info: " << ((float)t2 * 1000000)/(10000*CLOCKS_PER_SEC) << " micro-secs" << std::endl;
     ATH_MSG_VERBOSE(" Got splitProbability, size of vector: " << vectorOfProbs.size() );
 
     if (vectorOfProbs.size()==0)
