@@ -28,6 +28,8 @@
 
 class IBeamCondSvc;
 
+//class TrigTimer; //forward declare
+
 namespace InDet {
 
   class NnClusterizationFactory;
@@ -57,6 +59,8 @@ namespace InDet {
     std::vector<double> m_priorMultiplicityContent;
 
     bool m_useBeamSpotInfo;
+
+    //ToolHandle<TrigTimer> m_numNNTimer;
 
   };
   

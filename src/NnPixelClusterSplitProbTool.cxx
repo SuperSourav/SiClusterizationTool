@@ -20,7 +20,9 @@
 #include "VxVertex/RecVertex.h"
 #include "InDetBeamSpotService/IBeamCondSvc.h"
 
-#include <time.h>
+//#include <time.h>
+
+#include "TrigTimeAlgs/TrigTimer.h"
 
 namespace InDet
 {
@@ -31,6 +33,7 @@ namespace InDet
            m_NnClusterizationFactory("InDet::NnClusterizationFactory/NnClusterizationFactory"),
            m_iBeamCondSvc("BeamCondSvc",n),
            m_useBeamSpotInfo(true)
+	   //m_numNNTimer(nullptr)
   {
 
     m_priorMultiplicityContent.push_back(2793337);
@@ -64,6 +67,10 @@ namespace InDet
       ATH_MSG_ERROR( "Could not find BeamCondSvc." );
       return StatusCode::FAILURE;
     }
+
+    // trigtimer
+    //m_numNNTimer = addTimer("numNNTimer");
+    //
 
     ATH_MSG_INFO(" Cluster split prob tool initialized successfully "<< m_NnClusterizationFactory );
     return StatusCode::SUCCESS;
@@ -113,14 +120,29 @@ namespace InDet
 
     if (!m_useBeamSpotInfo) beamSpotPosition=Amg::Vector3D(0,0,0);
 
-    clock_t t2 = clock();
-    int repeats = 10000;
+    //clock_t t2 = clock();
+    //int repeats = 10000;
     std::vector<double> vectorOfProbs;
-    for (int s=0; s<repeats; s++){
+    //for (int s=0; s<repeats; s++){
+    //declare trigtimer smart pointer
+    bool active = true;
+    TrigTimer* numNNTimer;
+    std::string itemname="numNNTimerA";
+    numNNTimer = new TrigTimer(itemname, active); //, true);
+    //std::unique_ptr<TrigTimer> numNNTimer;
+    //numNNTimer = std::make_unique<TrigTimer>("numNNTimer");
+    //starting the trigtimer
+    numNNTimer->start();
       vectorOfProbs=m_NnClusterizationFactory->estimateNumberOfParticles(origCluster, trackParameters.associatedSurface(), trackParameters);
-    }
-    t2 = clock() - t2;
-    std::cout << "~~~~~~~~~~~~~~~~~~~~~~~CLOCK~~~~~~~~~~~> numNN call (w/) trk info: " << ((float)t2 * 1000000)/(repeats*CLOCKS_PER_SEC) << " micro-secs" << "total time: " << ((float)t2/CLOCKS_PER_SEC) << "sec" << std::endl;
+    //stopping the trigtimer
+    numNNTimer->stop();
+    delete numNNTimer;
+    //}
+    //t2 = clock() - t2;
+    //std::cout << "~~~~~~~~~~~~~~~~~~~~~~~CLOCK~~~~~~~~~~~> numNN call (w/) trk info: " << ((float)t2 * 1000000)/(repeats*CLOCKS_PER_SEC) << " micro-secs" << "total time: " << ((float)t2/CLOCKS_PER_SEC) << "sec" << std::endl;
+    //printing out the time
+    std::cout << numNNTimer->elapsed() << " ms -> NumNN call (w/ trackinfo) *******************TRIGTIMER" << std::endl;
+
     ATH_MSG_VERBOSE(" Got splitProbability, size of vector: " << vectorOfProbs.size() );
 
     if (vectorOfProbs.size()==0)

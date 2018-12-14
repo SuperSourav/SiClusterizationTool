@@ -32,7 +32,8 @@ atlas_depends_on_subdirs(
    Tracking/TrkDetDescr/TrkSurfaces
    Tracking/TrkEvent/TrkEventPrimitives
    Tracking/TrkEvent/VxVertex
-   Tracking/TrkUtilityPackages/TrkNeuralNetworkUtils )
+   Tracking/TrkUtilityPackages/TrkNeuralNetworkUtils 
+   Trigger/TrigTools/TrigTimeAlgs )
 
 # External dependencies:
 find_package( CLHEP )
@@ -54,7 +55,7 @@ atlas_add_library( SiClusterizationToolLib
 
 atlas_add_component( SiClusterizationTool
    src/components/*.cxx
-   LINK_LIBRARIES GaudiKernel SiClusterizationToolLib )
+   LINK_LIBRARIES GaudiKernel SiClusterizationToolLib  TrigTimeAlgsLib )
 
 # Install files from the package:
 atlas_install_joboptions( share/*.py )
