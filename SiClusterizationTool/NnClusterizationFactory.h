@@ -89,16 +89,12 @@ namespace InDet {
      
     std::vector<double> estimateNumberOfParticles(const InDet::PixelCluster& pCluster,
                                                   Amg::Vector3D & beamSpotPosition,
-                                                  int padX=0,
-                                                  int padY=0,
                                                   int sizeX=7,
                                                   int sizeY=7);
 
     std::vector<double> estimateNumberOfParticles(const InDet::PixelCluster& pCluster,
                                                   const Trk::Surface& pixelSurface,
                                                   const Trk::TrackParameters& trackParsAtSurface,
-                                                  int padX=0,
-                                                  int padY=0,
                                                   int sizeX=7,
                                                   int sizeY=7);
     
@@ -106,8 +102,6 @@ namespace InDet {
                                                       Amg::Vector3D & beamSpotPosition,
                                                       std::vector<Amg::MatrixX> & errors,
                                                       int numberSubClusters,
-                                                      int padX=0,
-                                                      int padY=0,
                                                       int sizeX=7,
                                                       int sizeY=7);
 
@@ -117,8 +111,6 @@ namespace InDet {
                                                       const Trk::TrackParameters& trackParsAtSurface,
                                                       std::vector<Amg::MatrixX> & errors,
                                                       int numberSubClusters,
-                                                      int padX=0,
-                                                      int padY=0,
                                                       int sizeX=7,
                                                       int sizeY=7);
                                                       
@@ -133,8 +125,6 @@ namespace InDet {
     std::vector<Amg::Vector2D> estimatePositions(std::vector<double> inputData,
                                                       NNinput* input,
                                                       const InDet::PixelCluster& pCluster,
-                                                      int padX,
-                                                      int padY,
                                                       int sizeX,
                                                       int sizeY,
                                                       bool useTrackInfo,
@@ -145,8 +135,6 @@ namespace InDet {
     NNinput* createInput(const InDet::PixelCluster& pCluster,
                          Amg::Vector3D & beamSpotPosition,
                          double & tanl,
-			 int padX=0,
-			 int padY=0,
                          int sizeX=7,
                          int sizeY=7);
     
@@ -164,23 +152,17 @@ namespace InDet {
 
 
     std::vector<double> assembleInput(NNinput& input,
-                                      int padX,
-                                      int padY,
                                       int sizeX,
                                       int sizeY);
 
 
   std::vector<double> assembleInputRunI(NNinput& input,
-                                      int padX,
-                                      int padY,
                                       int sizeX,
                                       int sizeY);
 
 
 
   std::vector<double> assembleInputRunII(NNinput& input,
-                                      int padX,
-                                      int padY,
                                       int sizeX,
                                       int sizeY);
 
@@ -189,8 +171,6 @@ namespace InDet {
     std::vector<Amg::Vector2D> getPositionsFromOutput(std::vector<double> & output,
 						      NNinput & input,
 						      const InDet::PixelCluster& pCluster,
-						      int padX=0,
-						      int padY=0,
 						      int sizeX=7,
 						      int sizeY=7);
 

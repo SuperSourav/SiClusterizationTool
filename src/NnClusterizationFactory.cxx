@@ -175,13 +175,11 @@ namespace InDet {
   
   
 std::vector<double> NnClusterizationFactory::assembleInput(NNinput& input,
-                                                             int padX,
-                                                             int padY,
                                                              int sizeX,
                                                              int sizeY)
 {
 
-if(m_doRunI){    return assembleInputRunI(  input, padX, padY, sizeX, sizeY    );       }else{   return assembleInputRunII(  input, padX, padY, sizeX, sizeY    );     }
+if(m_doRunI){    return assembleInputRunI(  input, sizeX, sizeY    );       }else{   return assembleInputRunII(  input, sizeX, sizeY    );     }
 
 
 }
@@ -189,16 +187,14 @@ if(m_doRunI){    return assembleInputRunI(  input, padX, padY, sizeX, sizeY    )
 
 
   std::vector<double> NnClusterizationFactory::assembleInputRunII(NNinput& input,
-                                                             int padX,
-                                                             int padY,
                                                              int sizeX,
                                                              int sizeY)
 {
 
     std::vector<double> inputData;
-    for (int u=0+padX;u<sizeX-padX;u++)
+    for (int u=0;u<sizeX;u++)
     {
-      for (int s=0+padY;s<sizeY-padY;s++)
+      for (int s=0;s<sizeY;s++)
       {
         if (m_useToT)
         {
@@ -210,7 +206,7 @@ if(m_doRunI){    return assembleInputRunI(  input, padX, padY, sizeX, sizeY    )
         }
       }
     }
-    for (int s=0+padY;s<sizeY-padY;s++)
+    for (int s=0;s<sizeY;s++)
     {
       inputData.push_back(input.vectorOfPitchesY[s]);
     }
@@ -240,15 +236,13 @@ if(m_doRunI){    return assembleInputRunI(  input, padX, padY, sizeX, sizeY    )
 
 
   std::vector<double> NnClusterizationFactory::assembleInputRunI(NNinput& input,
-                                                             int padX,
-                                                             int padY,
                                                              int sizeX,
                                                              int sizeY)
   {
     std::vector<double> inputData;
-    for (int u=0+padX;u<sizeX-padX;u++)
+    for (int u=0;u<sizeX;u++)
     {
-      for (int s=0+padY;s<sizeY-padY;s++)
+      for (int s=0;s<sizeY;s++)
       {
         if (m_useToT)
         {
@@ -260,7 +254,7 @@ if(m_doRunI){    return assembleInputRunI(  input, padX, padY, sizeX, sizeY    )
         }
       }
     }
-    for (int s=0+padY;s<sizeY-padY;s++)
+    for (int s=0;s<sizeY;s++)
     {
       const double rawPitch(input.vectorOfPitchesY[s]);
     	const double normPitch(norm_pitch(rawPitch,m_addIBL));
@@ -289,8 +283,6 @@ if(m_doRunI){    return assembleInputRunI(  input, padX, padY, sizeX, sizeY    )
 
   std::vector<double> NnClusterizationFactory::estimateNumberOfParticles(const InDet::PixelCluster& pCluster,
                                                                          Amg::Vector3D & beamSpotPosition,
-                                                                         int padX,
-                                                                         int padY,
                                                                          int sizeX,
                                                                          int sizeY)
   {
@@ -300,8 +292,6 @@ if(m_doRunI){    return assembleInputRunI(  input, padX, padY, sizeX, sizeY    )
     NNinput* input=createInput(pCluster,
                                beamSpotPosition,
                                tanl,
-                               padX,
-                               padY,
                                sizeX,
                                sizeY);
     
@@ -311,7 +301,7 @@ if(m_doRunI){    return assembleInputRunI(  input, padX, padY, sizeX, sizeY    )
     }
     
     
-    std::vector<double> inputData=assembleInput(*input,padX,padY,sizeX,sizeY);
+    std::vector<double> inputData=assembleInput(*input,sizeX,sizeY);
 
         
     
@@ -339,8 +329,6 @@ if(m_doRunI){    return assembleInputRunI(  input, padX, padY, sizeX, sizeY    )
   std::vector<double> NnClusterizationFactory::estimateNumberOfParticles(const InDet::PixelCluster& pCluster,
                                                                          const Trk::Surface& pixelSurface,
                                                                          const Trk::TrackParameters& trackParsAtSurface,
-                                                                         int padX,
-                                                                         int padY,
                                                                          int sizeX,
                                                                          int sizeY)
   {
@@ -352,8 +340,6 @@ if(m_doRunI){    return assembleInputRunI(  input, padX, padY, sizeX, sizeY    )
     NNinput* input=createInput(pCluster,
                                dummyBS,
                                tanl,
-                               padX,
-                               padY,
                                sizeX,
                                sizeY);
     
@@ -364,7 +350,7 @@ if(m_doRunI){    return assembleInputRunI(  input, padX, padY, sizeX, sizeY    )
     
     addTrackInfoToInput(input,pixelSurface,trackParsAtSurface,tanl);
     
-    std::vector<double> inputData=assembleInput(*input,padX,padY,sizeX,sizeY);
+    std::vector<double> inputData=assembleInput(*input,sizeX,sizeY);
     
 
 
@@ -388,8 +374,6 @@ if(m_doRunI){    return assembleInputRunI(  input, padX, padY, sizeX, sizeY    )
                                                                              Amg::Vector3D & beamSpotPosition,
                                                                              std::vector<Amg::MatrixX> & errors,
                                                                              int numberSubClusters,
-                                                                             int padX,
-                                                                             int padY,
                                                                              int sizeX,
                                                                              int sizeY)
   {
@@ -401,8 +385,6 @@ if(m_doRunI){    return assembleInputRunI(  input, padX, padY, sizeX, sizeY    )
     NNinput* input=createInput(pCluster,
                                beamSpotPosition,
                                tanl,
-                               padX,
-                               padY,
                                sizeX,
                                sizeY);
     
@@ -412,10 +394,10 @@ if(m_doRunI){    return assembleInputRunI(  input, padX, padY, sizeX, sizeY    )
     }
     
     
-    std::vector<double> inputData=assembleInput(*input,padX,padY,sizeX,sizeY);
+    std::vector<double> inputData=assembleInput(*input,sizeX,sizeY);
 
 
-    return estimatePositions(inputData,input,pCluster,padX,padY,sizeX,sizeY,false,numberSubClusters,errors);
+    return estimatePositions(inputData,input,pCluster,sizeX,sizeY,false,numberSubClusters,errors);
 
 
     
@@ -427,8 +409,6 @@ if(m_doRunI){    return assembleInputRunI(  input, padX, padY, sizeX, sizeY    )
                                                                              const Trk::TrackParameters& trackParsAtSurface,
                                                                              std::vector<Amg::MatrixX> & errors,
                                                                              int numberSubClusters,
-                                                                             int padX,
-                                                                             int padY,
                                                                              int sizeX,
                                                                              int sizeY)
   {
@@ -441,8 +421,6 @@ if(m_doRunI){    return assembleInputRunI(  input, padX, padY, sizeX, sizeY    )
     NNinput* input=createInput(pCluster,
                                dummyBS,
                                tanl,
-                               padX,
-                               padY,
                                sizeX,
                                sizeY);
     
@@ -454,17 +432,15 @@ if(m_doRunI){    return assembleInputRunI(  input, padX, padY, sizeX, sizeY    )
     
     addTrackInfoToInput(input,pixelSurface,trackParsAtSurface,tanl);
 
-    std::vector<double> inputData=assembleInput(*input,padX,padY,sizeX,sizeY);
+    std::vector<double> inputData=assembleInput(*input,sizeX,sizeY);
 
 
-    return estimatePositions(inputData,input,pCluster,padX,padY,sizeX,sizeY,true,numberSubClusters,errors);
+    return estimatePositions(inputData,input,pCluster,sizeX,sizeY,true,numberSubClusters,errors);
   }
   
   std::vector<Amg::Vector2D> NnClusterizationFactory::estimatePositions(std::vector<double> inputData,
                                                                              NNinput* input,
                                                                              const InDet::PixelCluster& pCluster,
-                                                                             int padX,
-                                                                             int padY,
                                                                              int sizeX,
                                                                              int sizeY,
                                                                              bool useTrackInfo,
@@ -512,7 +488,7 @@ if(m_doRunI){    return assembleInputRunI(  input, padX, padY, sizeX, sizeY    )
 
       ATH_MSG_VERBOSE(" RAW Estimated positions (1) x: " << back_posX(position1P[0],applyRecentering) << " y: " << back_posY(position1P[1]));
 
-      std::vector<Amg::Vector2D> myPosition1=getPositionsFromOutput(position1P,*input,pCluster,padX,padY,sizeX,sizeY);
+      std::vector<Amg::Vector2D> myPosition1=getPositionsFromOutput(position1P,*input,pCluster,sizeX,sizeY);
 
       ATH_MSG_VERBOSE(" Estimated myPositions (1) x: " << myPosition1[0][Trk::locX] << " y: " << myPosition1[0][Trk::locY]);
 
@@ -581,7 +557,7 @@ if(m_doRunI){    return assembleInputRunI(  input, padX, padY, sizeX, sizeY    )
 	ATH_MSG_VERBOSE(" RAW Estimated positions (2) x1: " << back_posX(positions2P[0],applyRecentering) << " y1: " << positions2P[1] << 
 			" x2: " << back_posX(positions2P[2],applyRecentering) << " y2: " << back_posY(positions2P[3]));
 	
-	std::vector<Amg::Vector2D> myPositions2=getPositionsFromOutput(positions2P,*input,pCluster,padX,padY,sizeX,sizeY);
+	std::vector<Amg::Vector2D> myPositions2=getPositionsFromOutput(positions2P,*input,pCluster,sizeX,sizeY);
 	
 	ATH_MSG_VERBOSE(" Estimated myPositions (2) x1: " << myPositions2[0][Trk::locX] << " y1: " << myPositions2[0][Trk::locY] << 
 			" x2: " << myPositions2[1][Trk::locX] << " y2: " << myPositions2[1][Trk::locY]);
@@ -652,7 +628,7 @@ if(m_doRunI){    return assembleInputRunI(  input, padX, padY, sizeX, sizeY    )
 	ATH_MSG_VERBOSE(" RAW Estimated positions (3) x1: " << back_posX(positions3P[0],applyRecentering) << " y1: " << back_posY(positions3P[1]) << 
 			" x2: " << back_posX(positions3P[2],applyRecentering) << " y2: " << back_posY(positions3P[3]) << " x3: " << back_posX(positions3P[4],applyRecentering) << " y3: " << back_posY(positions3P[5]));
 	
-	std::vector<Amg::Vector2D> myPositions3=getPositionsFromOutput(positions3P,*input,pCluster,padX,padY,sizeX,sizeY);
+	std::vector<Amg::Vector2D> myPositions3=getPositionsFromOutput(positions3P,*input,pCluster,sizeX,sizeY);
 	
 	ATH_MSG_VERBOSE(" Estimated myPositions (3) x1: " << myPositions3[0][Trk::locX] << " y1: " << myPositions3[0][Trk::locY] << 
 			" x2: " << myPositions3[1][Trk::locX] << " y2: " << myPositions3[1][Trk::locY] << " x3: " << myPositions3[2][Trk::locX] << " y3: " << myPositions3[2][Trk::locY]);
@@ -819,8 +795,6 @@ if(m_doRunI){    return assembleInputRunI(  input, padX, padY, sizeX, sizeY    )
   std::vector<Amg::Vector2D> NnClusterizationFactory::getPositionsFromOutput(std::vector<double> & output,
                                                                                   NNinput & input,
                                                                                   const InDet::PixelCluster& pCluster,
-										  int /* padX */,
-										  int /* padY */,
                                                                                   int /* sizeX */,
                                                                                   int /* sizeY */)
   {
@@ -967,8 +941,6 @@ if(m_doRunI){    return assembleInputRunI(  input, padX, padY, sizeX, sizeY    )
   NNinput* NnClusterizationFactory::createInput(const InDet::PixelCluster& pCluster,
                                                 Amg::Vector3D & beamSpotPosition,
                                                 double & tanl,
-						int padX,
-						int padY,
                                                 int sizeX,
                                                 int sizeY)
 {
@@ -1153,16 +1125,16 @@ if(m_doRunI){    return assembleInputRunI(  input, padX, padY, sizeX, sizeY    )
   std::vector<std::vector<float> > matrixOfToT;
   std::vector<float> vectorOfPitchesY;
 
-  for (int a=0+padX;a<sizeX-padX;a++)
+  for (int a=0;a<sizeX;a++)
   {
     std::vector<float> Yvector;
-    for (int b=0+padY;b<sizeY-padY;b++)
+    for (int b=0;b<sizeY;b++)
     {
       Yvector.push_back(0);
     }
     input->matrixOfToT.push_back(Yvector);
   }
-  for (int b=0+padY;b<sizeY-padY;b++)
+  for (int b=0;b<sizeY;b++)
   {
     input->vectorOfPitchesY.push_back(0.4);
   }
@@ -1203,16 +1175,16 @@ if(m_doRunI){    return assembleInputRunI(  input, padX, padY, sizeX, sizeY    )
     }
     
 
-    if (absrow <0+padX || absrow > sizeX-padX)
+    if (absrow <0 || absrow > sizeX)
     {
-      ATH_MSG_WARNING(" problem with index: " << absrow << " min: " << 0+padX << " max: " << sizeX-padX);
+      ATH_MSG_WARNING(" problem with index: " << absrow << " min: " << 0 << " max: " << sizeX);
       delete input;
       input=0;
       return 0;
     }
-    if (abscol <0+padY || abscol > sizeY-padY)
+    if (abscol <0 || abscol > sizeY)
     {
-      ATH_MSG_WARNING(" problem with index: " << abscol << " min: " << 0+padY << " max: " << sizeY-padY);
+      ATH_MSG_WARNING(" problem with index: " << abscol << " min: " << 0 << " max: " << sizeY);
       delete input;
       input=0;
       return 0;
