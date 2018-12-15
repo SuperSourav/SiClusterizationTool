@@ -25,10 +25,13 @@
 //Beam Spot Condition
 #include "InDetBeamSpotService/IBeamCondSvc.h"
 #include "TrkParameters/TrackParameters.h"
+//trigtimer service
+#include "TrigTimeAlgs/ITrigTimerSvc.h"
+
 
 class IBeamCondSvc;
 
-//class TrigTimer; //forward declare
+class TrigTimer; //forward declare trigtimer
 
 namespace InDet {
 
@@ -60,6 +63,10 @@ namespace InDet {
 
     bool m_useBeamSpotInfo;
 
+    //trigtimer
+    //const HLT::TrigSteer *m_parentAlg;
+    TrigTimer *m_timer;
+    ServiceHandle<ITrigTimerSvc> m_timerSvc; 
     //ToolHandle<TrigTimer> m_numNNTimer;
 
   };

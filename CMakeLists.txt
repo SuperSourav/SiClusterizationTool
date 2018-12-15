@@ -49,7 +49,7 @@ atlas_add_library( SiClusterizationToolLib
    LINK_LIBRARIES ${ROOT_LIBRARIES} AthenaBaseComps AthenaKernel GeoPrimitives
    Identifier EventPrimitives GaudiKernel InDetSimData InDetIdentifier
    InDetReadoutGeometry InDetRawData InDetPrepRawData InDetRecToolInterfaces
-   TrkParameters TrkNeuralNetworkUtilsLib
+   TrkParameters TrkNeuralNetworkUtilsLib TrigTimeAlgsLib
    PRIVATE_LINK_LIBRARIES ${CLHEP_LIBRARIES} AthenaPoolUtilities AtlasDetDescr
    TrkSurfaces TrkEventPrimitives VxVertex PixelGeoModelLib )
 

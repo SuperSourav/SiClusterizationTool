@@ -22,6 +22,8 @@
 
 //#include <time.h>
 
+//trigtimer
+//#include "TrigSteering/TrigSteer.h"
 #include "TrigTimeAlgs/TrigTimer.h"
 
 namespace InDet
@@ -32,7 +34,9 @@ namespace InDet
           :AthAlgTool(t,n,p),
            m_NnClusterizationFactory("InDet::NnClusterizationFactory/NnClusterizationFactory"),
            m_iBeamCondSvc("BeamCondSvc",n),
-           m_useBeamSpotInfo(true)
+           m_useBeamSpotInfo(true),
+	   m_timer(0),
+	   m_timerSvc("TrigTimerSvc/TrigTimerSvc", n)
 	   //m_numNNTimer(nullptr)
   {
 
@@ -69,7 +73,23 @@ namespace InDet
     }
 
     // trigtimer
-    //m_numNNTimer = addTimer("numNNTimer");
+    //if (m_timerSvc.retrieve().isFailure())
+    //{
+    //  ATH_MSG_ERROR(" Unable to retrieve "<< m_timerSvc );
+    //  return StatusCode::FAILURE;
+    //}
+    //else
+    //{
+    /*m_parentAlg = dynamic_cast<const HLT::TrigSteer*>(parent());
+    if(!m_parentAlg) {
+      ATH_MSG_ERROR(" Unable to cast the parent algorithm to HLT::TrigSteer!");
+      return StatusCode::FAILURE;
+    }*/
+    CHECK(m_timerSvc.retrieve());
+    ATH_MSG_INFO("Retrieved TrigTimerSvc");
+    m_timer = m_timerSvc->addItem("numNettimer");
+    ATH_MSG_INFO("TriTimer name: " << m_timer->name() );
+    //}
     //
 
     ATH_MSG_INFO(" Cluster split prob tool initialized successfully "<< m_NnClusterizationFactory );
@@ -125,23 +145,24 @@ namespace InDet
     std::vector<double> vectorOfProbs;
     //for (int s=0; s<repeats; s++){
     //declare trigtimer smart pointer
-    bool active = true;
-    TrigTimer* numNNTimer;
-    std::string itemname="numNNTimerA";
-    numNNTimer = new TrigTimer(itemname, active); //, true);
+    //bool active = true;
+    //TrigTimer* numNNTimer;
+    //std::string itemname="numNNTimerA";
+    //numNNTimer = new TrigTimer(itemname, active); //, true);
     //std::unique_ptr<TrigTimer> numNNTimer;
     //numNNTimer = std::make_unique<TrigTimer>("numNNTimer");
     //starting the trigtimer
-    numNNTimer->start();
+    std::cout << m_timer->isActive() << std::endl;
+    m_timer->start();
       vectorOfProbs=m_NnClusterizationFactory->estimateNumberOfParticles(origCluster, trackParameters.associatedSurface(), trackParameters);
     //stopping the trigtimer
-    numNNTimer->stop();
-    delete numNNTimer;
+    m_timer->stop();
+    //delete numNNTimer;
     //}
     //t2 = clock() - t2;
     //std::cout << "~~~~~~~~~~~~~~~~~~~~~~~CLOCK~~~~~~~~~~~> numNN call (w/) trk info: " << ((float)t2 * 1000000)/(repeats*CLOCKS_PER_SEC) << " micro-secs" << "total time: " << ((float)t2/CLOCKS_PER_SEC) << "sec" << std::endl;
     //printing out the time
-    std::cout << numNNTimer->elapsed() << " ms -> NumNN call (w/ trackinfo) *******************TRIGTIMER" << std::endl;
+    std::cout << m_timer->elapsed() << " ms -> NumNN call (w/ trackinfo) *******************TRIGTIMER" << std::endl;
 
     ATH_MSG_VERBOSE(" Got splitProbability, size of vector: " << vectorOfProbs.size() );
 
