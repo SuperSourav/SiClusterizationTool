@@ -148,7 +148,7 @@ namespace InDet {
     bool m_loadNoTrackNetworks;
     bool m_loadWithTrackNetworks;
 
-    TTrainedNetwork* retrieveNetwork(const std::string& folder, const std::string& subfolder);
+    TTrainedNetwork* retrieveNetwork(const std::string& folder, const std::string& subfolder, bool printwts);
 
 
     std::vector<double> assembleInput(NNinput& input,

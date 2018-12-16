@@ -54,8 +54,8 @@ namespace InDet {
   NnClusterizationFactory::NnClusterizationFactory(const std::string& name,
                                                    const std::string& n, const IInterface* p):
           AthAlgTool(name, n,p),
-          m_loadNoTrackNetworks(true),
-          m_loadWithTrackNetworks(false),
+          m_loadNoTrackNetworks(false),
+          m_loadWithTrackNetworks(true),
           m_NetworkEstimateNumberParticles(0),
           m_NetworkEstimateNumberParticles_NoTrack(0),
           m_coolFolder("/PIXEL/PixelClustering/PixelClusNNCalib"),
@@ -1272,7 +1272,7 @@ if(m_doRunI){    return assembleInputRunI(  input, sizeX, sizeY    );       }els
 }//end create NNinput function
 
 
-  TTrainedNetwork* NnClusterizationFactory::retrieveNetwork(const std::string& folder, const std::string& subfolder)
+  TTrainedNetwork* NnClusterizationFactory::retrieveNetwork(const std::string& folder, const std::string& subfolder, bool printwts = false)
   {
     
     std::vector<TH1*> retrievedHistos;
@@ -1308,7 +1308,8 @@ if(m_doRunI){    return assembleInputRunI(  input, sizeX, sizeY    );       }els
     // retrieve the number of hidden layers from the LayerInfo histogram
     Int_t nHidden = histolayers->GetNbinsX()-2;
     ATH_MSG_VERBOSE(" Retrieving calibration: " << folder << "/" << subfolder << " for NN with: " << nHidden << " hidden layers.");
-
+    if (printwts) {
+    std::cout << " Retrieving calibration: " << folder << "/" << subfolder << " for NN with: " << nHidden << " hidden layers." << std::endl; }
     // loop and retrieve the hidden layer histograms
     for (Int_t i=0; i<nHidden+1; ++i)
     {
@@ -1325,6 +1326,17 @@ if(m_doRunI){    return assembleInputRunI(  input, sizeX, sizeY    );       }els
       } else {
           ATH_MSG_VERBOSE(" Retrieved histo: " << weightNameStr << " for network : " << subfolder << 
                           " the first bin content of the weight 2d histo is: " << myWeightHisto->GetBinContent(1,1));
+          if (printwts) {
+	    std::cout << "NN: Retrieved histo: " << weightNameStr << " for network : " << subfolder << std::endl;
+	    int nbinx = myWeightHisto->GetNbinsX();
+	    int nbiny = myWeightHisto->GetNbinsY();
+	    for (int binx = 0; binx < nbinx; binx++){
+	      for (int biny = 0; biny < nbiny; biny++){
+	        std::cout << "NN: weight 2d bin content (" << binx+1 << ", " << biny+1 << " ): " << myWeightHisto->GetBinContent(binx+1,biny+1) << std::endl; 
+	      }
+	    }
+	  } //printing wts stops
+		       
       }
       // threshold histograms to be retrieved
       TH1* myThresholdHisto = 0;
@@ -1381,7 +1393,7 @@ if(m_doRunI){    return assembleInputRunI(  input, sizeX, sizeY    );       }els
               if (m_loadNoTrackNetworks)
               {
                 ATH_MSG_VERBOSE("Loading 10 networks for number estimate, position estimate and error PDF estimate (without track info)");
-                m_NetworkEstimateNumberParticles_NoTrack=retrieveNetwork(m_coolFolder,"NumberParticles_NoTrack/");
+                m_NetworkEstimateNumberParticles_NoTrack=retrieveNetwork(m_coolFolder,"NumberParticles_NoTrack/"); 
                 m_NetworkEstimateImpactPoints_NoTrack.push_back(retrieveNetwork(m_coolFolder,"ImpactPoints1P_NoTrack/"));
                 m_NetworkEstimateImpactPoints_NoTrack.push_back(retrieveNetwork(m_coolFolder,"ImpactPoints2P_NoTrack/"));
                 m_NetworkEstimateImpactPoints_NoTrack.push_back(retrieveNetwork(m_coolFolder,"ImpactPoints3P_NoTrack/"));
@@ -1396,8 +1408,11 @@ if(m_doRunI){    return assembleInputRunI(  input, sizeX, sizeY    );       }els
               //now read all Histograms
               if (m_loadWithTrackNetworks)
               {
+		bool printNNwts = true;
                 ATH_MSG_VERBOSE("Loading 10 networks for number estimate, position estimate and error PDF estimate (with track info)");
-                m_NetworkEstimateNumberParticles=retrieveNetwork(m_coolFolder,"NumberParticles/");
+		std::cout << "PRINT NUMBER NN WTS ********>" << std::endl;
+                m_NetworkEstimateNumberParticles=retrieveNetwork(m_coolFolder,"NumberParticles/", printNNwts);
+		std::cout << "<******** PRINT NUMBER NN WTS" << std::endl;
                 m_NetworkEstimateImpactPoints.push_back(retrieveNetwork(m_coolFolder,"ImpactPoints1P/"));
                 m_NetworkEstimateImpactPoints.push_back(retrieveNetwork(m_coolFolder,"ImpactPoints2P/"));
                 m_NetworkEstimateImpactPoints.push_back(retrieveNetwork(m_coolFolder,"ImpactPoints3P/"));
