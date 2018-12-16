@@ -20,7 +20,7 @@
 #include "VxVertex/RecVertex.h"
 #include "InDetBeamSpotService/IBeamCondSvc.h"
 
-//#include <time.h>
+#include <time.h>
 
 //trigtimer
 //#include "TrigSteering/TrigSteer.h"
@@ -140,10 +140,10 @@ namespace InDet
 
     if (!m_useBeamSpotInfo) beamSpotPosition=Amg::Vector3D(0,0,0);
 
-    //clock_t t2 = clock();
-    //int repeats = 10000;
+    clock_t t2 = clock(); //clock
+    int repeats = 10000; //clock
     std::vector<double> vectorOfProbs;
-    //for (int s=0; s<repeats; s++){
+    for (int s=0; s<repeats; s++){ //clock
     //declare trigtimer smart pointer
     //bool active = true;
     //TrigTimer* numNNTimer;
@@ -152,17 +152,17 @@ namespace InDet
     //std::unique_ptr<TrigTimer> numNNTimer;
     //numNNTimer = std::make_unique<TrigTimer>("numNNTimer");
     //starting the trigtimer
-    std::cout << m_timer->isActive() << std::endl;
-    m_timer->start();
+    //std::cout << m_timer->isActive() << std::endl; //time
+    //m_timer->start(); //time
       vectorOfProbs=m_NnClusterizationFactory->estimateNumberOfParticles(origCluster, trackParameters.associatedSurface(), trackParameters);
     //stopping the trigtimer
-    m_timer->stop();
+    //m_timer->stop(); //time
     //delete numNNTimer;
-    //}
-    //t2 = clock() - t2;
-    //std::cout << "~~~~~~~~~~~~~~~~~~~~~~~CLOCK~~~~~~~~~~~> numNN call (w/) trk info: " << ((float)t2 * 1000000)/(repeats*CLOCKS_PER_SEC) << " micro-secs" << "total time: " << ((float)t2/CLOCKS_PER_SEC) << "sec" << std::endl;
+    }
+    t2 = clock() - t2;
+    std::cout << "~~~~~~~~~~~~~~~~~~~~~~~CLOCK~~~~~~~~~~~> numNN call (w/) trk info: " << ((float)t2 * 1000000)/(repeats*CLOCKS_PER_SEC) << " micro-secs" << "total time: " << ((float)t2/CLOCKS_PER_SEC) << "sec" << std::endl;
     //printing out the time
-    std::cout << m_timer->elapsed() << " ms -> NumNN call (w/ trackinfo) *******************TRIGTIMER" << std::endl;
+    //std::cout << m_timer->elapsed() << " ms -> NumNN call (w/ trackinfo) *******************TRIGTIMER" << std::endl;
 
     ATH_MSG_VERBOSE(" Got splitProbability, size of vector: " << vectorOfProbs.size() );
 
