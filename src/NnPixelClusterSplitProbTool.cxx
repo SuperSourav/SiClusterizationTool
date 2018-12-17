@@ -153,7 +153,7 @@ namespace InDet
     //std::unique_ptr<TrigTimer> numNNTimer;
     //numNNTimer = std::make_unique<TrigTimer>("numNNTimer");
     //starting the trigtimer
-    std::cout << m_timer->isActive() << std::endl;
+    std::cout  << " ****** cluster starts **************"  << m_timer->isActive() << std::endl;
     m_timer->start();
       vectorOfProbs=m_NnClusterizationFactory->estimateNumberOfParticles(origCluster, trackParameters.associatedSurface(), trackParameters);
     //stopping the trigtimer

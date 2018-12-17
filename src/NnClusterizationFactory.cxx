@@ -361,6 +361,13 @@ if(m_doRunI){    return assembleInputRunI(  input, sizeX, sizeY    );       }els
     }else{
       resultNN = m_NetworkEstimateNumberParticles->calculateNormalized(inputData);
     }
+    //printing the NNwts being used
+    std::vector<TMatrixD*> NNwts = m_NetworkEstimateNumberParticles->weightMatrices();
+    for (int NNlayer=0; NNlayer < NNwts.size(); ++NNlayer){
+      std::cout << "NN layer: " << NNlayer << std::endl;
+      NNwts[NNlayer]->Print();
+      std::cout << "*********" << std::endl;
+    }
 
     ATH_MSG_VERBOSE(" Prob of n. particles (1): " << resultNN[0] << " (2): " << resultNN[1] << " (3): " << resultNN[2]);
 
