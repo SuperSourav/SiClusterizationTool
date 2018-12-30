@@ -47,6 +47,8 @@
 //get std::isnan()
 #include <cmath>
 
+//trigtimer
+#include "TrigTimeAlgs/TrigTimer.h"
 
 
 namespace InDet {
@@ -71,7 +73,18 @@ namespace InDet {
           m_useRecenteringNNWithouTracks(false),
           m_useRecenteringNNWithTracks(false),
           m_correctLorShiftBarrelWithoutTracks(0.),
-          m_correctLorShiftBarrelWithTracks(0.)
+          m_correctLorShiftBarrelWithTracks(0.),
+	  m_timerNum(0),
+	  m_timerPos1(0),
+	  m_timerPos2(0),
+	  m_timerPos3(0),
+	  m_timerErrX1(0),
+	  m_timerErrX2(0),
+	  m_timerErrX3(0),
+          m_timerErrY1(0),
+          m_timerErrY2(0),
+          m_timerErrY3(0),
+          m_timerSvcALL("TrigTimerSvc/TrigTimerSvc", n)
   {
     // histogram loading from COOL
     declareProperty("CoolFolder",                   m_coolFolder);
@@ -170,6 +183,29 @@ namespace InDet {
         return StatusCode::FAILURE;
     }
     
+    CHECK(m_timerSvcALL.retrieve());
+    ATH_MSG_INFO("Retrieved TrigTimerSvc");
+    m_timerNum = m_timerSvcALL->addItem("numNettimer");
+    m_timerPos1 = m_timerSvcALL->addItem("pos1Nettimer");
+    m_timerPos2 = m_timerSvcALL->addItem("pos2Nettimer");
+    m_timerPos3 = m_timerSvcALL->addItem("pos3Nettimer");
+    m_timerErrX1 = m_timerSvcALL->addItem("ErrX1Nettimer");
+    m_timerErrX2 = m_timerSvcALL->addItem("ErrX2Nettimer");
+    m_timerErrX3 = m_timerSvcALL->addItem("ErrX3Nettimer");
+    m_timerErrY1 = m_timerSvcALL->addItem("ErrY1Nettimer");
+    m_timerErrY2 = m_timerSvcALL->addItem("ErrY2Nettimer");
+    m_timerErrY3 = m_timerSvcALL->addItem("ErrY3Nettimer");
+    ATH_MSG_INFO("TriTimer pos1 name: " << m_timerNum->name() );
+    ATH_MSG_INFO("TriTimer pos1 name: " << m_timerPos1->name() );
+    ATH_MSG_INFO("TriTimer pos2 name: " << m_timerPos2->name() );
+    ATH_MSG_INFO("TriTimer pos3 name: " << m_timerPos3->name() );
+    ATH_MSG_INFO("TriTimer ErrX1 name: " << m_timerErrX1->name() );
+    ATH_MSG_INFO("TriTimer ErrX2 name: " << m_timerErrX2->name() );
+    ATH_MSG_INFO("TriTimer ErrX3 name: " << m_timerErrX3->name() );
+    ATH_MSG_INFO("TriTimer ErrY1 name: " << m_timerErrY1->name() );
+    ATH_MSG_INFO("TriTimer ErrY2 name: " << m_timerErrY2->name() );
+    ATH_MSG_INFO("TriTimer ErrY3 name: " << m_timerErrY3->name() );
+
     return StatusCode::SUCCESS;
   }
   
@@ -357,9 +393,17 @@ if(m_doRunI){    return assembleInputRunI(  input, sizeX, sizeY    );       }els
     std::vector<double> resultNN;
 
     if(m_doRunI){
+      std::cout << m_timerNum->isActive() << std::endl;
+      m_timerNum->start();
       resultNN = m_NetworkEstimateNumberParticles->calculateOutputValues(inputData);
+      m_timerNum->stop();
+      std::cout << m_timerNum->elapsed() << " microsec -> numNN call (w/ trackinfo) *******************TRIGTIMER" << std::endl;
     }else{
+      std::cout << m_timerNum->isActive() << std::endl;
+      m_timerNum->start();
       resultNN = m_NetworkEstimateNumberParticles->calculateNormalized(inputData);
+      m_timerNum->stop();
+      std::cout << m_timerNum->elapsed() << " microsec -> numNN call (w/ trackinfo) *******************TRIGTIMER" << std::endl;
     }
 
     ATH_MSG_VERBOSE(" Prob of n. particles (1): " << resultNN[0] << " (2): " << resultNN[1] << " (3): " << resultNN[2]);
@@ -479,9 +523,17 @@ if(m_doRunI){    return assembleInputRunI(  input, sizeX, sizeY    );       }els
       else
       {	
 	if(m_doRunI){
+	  std::cout << m_timerPos1->isActive() << std::endl;
+	  m_timerPos1->start();
 	  position1P=m_NetworkEstimateImpactPoints[0]->calculateOutputValues(inputData);
+	  m_timerPos1->stop();
+	  std::cout << m_timerPos1->elapsed() << " microsec -> pos1NN call (w/ trackinfo) *******************TRIGTIMER" << std::endl;
 	}else{
+	  std::cout << m_timerPos1->isActive() << std::endl;
+	  m_timerPos1->start();
 	  position1P=m_NetworkEstimateImpactPoints[0]->calculateNormalized(inputData);
+	  m_timerPos1->stop();
+	  std::cout << m_timerPos1->elapsed() << " microsec -> pos1NN call (w/ trackinfo) *******************TRIGTIMER" << std::endl;
 	}
       }
 
@@ -512,11 +564,27 @@ if(m_doRunI){    return assembleInputRunI(  input, sizeX, sizeY    );       }els
       else
 	{	
 	  if(m_doRunI){
+	  std::cout << m_timerErrX1->isActive() << std::endl;
+	  m_timerErrX1->start();
 	    errors1PX=m_NetworkEstimateImpactPointErrorsX[0]->calculateOutputValues(inputDataNew);
+	  m_timerErrX1->stop();
+	  std::cout << m_timerErrX1->elapsed() << " microsec -> ErrX1NN call (w/ trackinfo) *******************TRIGTIMER" << std::endl;
+	  std::cout << m_timerErrY1->isActive() << std::endl;
+	  m_timerErrY1->start();
 	    errors1PY=m_NetworkEstimateImpactPointErrorsY[0]->calculateOutputValues(inputDataNew);
+	  m_timerErrY1->stop();
+	  std::cout << m_timerErrY1->elapsed() << " microsec -> ErrY1NN call (w/ trackinfo) *******************TRIGTIMER" << std::endl;
 	  }else{
+	  std::cout << m_timerErrX1->isActive() << std::endl;
+	  m_timerErrX1->start();
 	    errors1PX=m_NetworkEstimateImpactPointErrorsX[0]->calculateNormalized(inputDataNew);
+	  m_timerErrX1->stop();
+	  std::cout << m_timerErrX1->elapsed() << " microsec -> ErrX1NN call (w/ trackinfo) *******************TRIGTIMER" << std::endl;
+	  std::cout << m_timerErrY1->isActive() << std::endl;
+	  m_timerErrY1->start();
 	    errors1PY=m_NetworkEstimateImpactPointErrorsY[0]->calculateNormalized(inputDataNew);
+	  m_timerErrY1->stop();
+	  std::cout << m_timerErrY1->elapsed() << " microsec -> ErrY1NN call (w/ trackinfo) *******************TRIGTIMER" << std::endl;
 	  }
 	}
      
@@ -548,9 +616,17 @@ if(m_doRunI){    return assembleInputRunI(  input, sizeX, sizeY    );       }els
 	else
 	  {
 	    if(m_doRunI){
+	  std::cout << m_timerPos2->isActive() << std::endl;
+	  m_timerPos2->start();
 	      positions2P=m_NetworkEstimateImpactPoints[1]->calculateOutputValues(inputData);
-	}else{
+	  m_timerPos2->stop();
+	  std::cout << m_timerPos2->elapsed() << " microsec -> pos2NN call (w/ trackinfo) *******************TRIGTIMER" << std::endl;
+	  }else{
+	  std::cout << m_timerPos2->isActive() << std::endl;
+	  m_timerPos2->start();
 	      positions2P=m_NetworkEstimateImpactPoints[1]->calculateNormalized(inputData);
+	  m_timerPos2->stop();
+	  std::cout << m_timerPos2->elapsed() << " microsec -> pos2NN call (w/ trackinfo) *******************TRIGTIMER" << std::endl;
 	    }
 	  }
       
@@ -585,11 +661,27 @@ if(m_doRunI){    return assembleInputRunI(  input, sizeX, sizeY    );       }els
 	else
 	  {
 	    if(m_doRunI){ 
+	  std::cout << m_timerErrX2->isActive() << std::endl;
+	  m_timerErrX2->start();
 	      errors2PX=m_NetworkEstimateImpactPointErrorsX[1]->calculateOutputValues(inputDataNew);
+	  m_timerErrX2->stop();
+	  std::cout << m_timerErrX2->elapsed() << " microsec -> ErrX2NN call (w/ trackinfo) *******************TRIGTIMER" << std::endl;
+	  std::cout << m_timerErrY2->isActive() << std::endl;
+	  m_timerErrY2->start();
 	      errors2PY=m_NetworkEstimateImpactPointErrorsY[1]->calculateOutputValues(inputDataNew);
+	  m_timerErrY2->stop();
+	  std::cout << m_timerErrY2->elapsed() << " microsec -> ErrY2NN call (w/ trackinfo) *******************TRIGTIMER" << std::endl;
 	    }else{
+	  std::cout << m_timerErrX2->isActive() << std::endl;
+	  m_timerErrX2->start();
 	      errors2PX=m_NetworkEstimateImpactPointErrorsX[1]->calculateNormalized(inputDataNew);
+	  m_timerErrX2->stop();
+	  std::cout << m_timerErrX2->elapsed() << " microsec -> ErrX2NN call (w/ trackinfo) *******************TRIGTIMER" << std::endl;
+	  std::cout << m_timerErrY2->isActive() << std::endl;
+	  m_timerErrY2->start();
 	      errors2PY=m_NetworkEstimateImpactPointErrorsY[1]->calculateNormalized(inputDataNew);
+	  m_timerErrY2->stop();
+	  std::cout << m_timerErrY2->elapsed() << " microsec -> ErrY2NN call (w/ trackinfo) *******************TRIGTIMER" << std::endl;
 	    }
 	  }
 	
@@ -618,9 +710,17 @@ if(m_doRunI){    return assembleInputRunI(  input, sizeX, sizeY    );       }els
 	else
 	  {
 	    if(m_doRunI){
+	  std::cout << m_timerPos3->isActive() << std::endl;
+	  m_timerPos3->start();
 	      positions3P=m_NetworkEstimateImpactPoints[2]->calculateOutputValues(inputData);
+	  m_timerPos3->stop();
+	  std::cout << m_timerPos3->elapsed() << " microsec -> pos3NN call (w/ trackinfo) *******************TRIGTIMER" << std::endl;
 	    }else{
+	  std::cout << m_timerPos3->isActive() << std::endl;
+	  m_timerPos3->start();
 	      positions3P=m_NetworkEstimateImpactPoints[2]->calculateNormalized(inputData);
+	  m_timerPos3->stop();
+	  std::cout << m_timerPos3->elapsed() << " microsec -> pos3NN call (w/ trackinfo) *******************TRIGTIMER" << std::endl;
 	      
 	    }
 	  }
@@ -657,11 +757,27 @@ if(m_doRunI){    return assembleInputRunI(  input, sizeX, sizeY    );       }els
 	else
 	  {
 	    if(m_doRunI){
+	  std::cout << m_timerErrX3->isActive() << std::endl;
+	  m_timerErrX3->start();
 	      errors3PX=m_NetworkEstimateImpactPointErrorsX[2]->calculateOutputValues(inputDataNew);
+	  m_timerErrX3->stop();
+	  std::cout << m_timerErrX3->elapsed() << " microsec -> ErrX3NN call (w/ trackinfo) *******************TRIGTIMER" << std::endl;
+	  std::cout << m_timerErrY3->isActive() << std::endl;
+	  m_timerErrY3->start();
 	      errors3PY=m_NetworkEstimateImpactPointErrorsY[2]->calculateOutputValues(inputDataNew);
+	  m_timerErrY3->stop();
+	  std::cout << m_timerErrY3->elapsed() << " microsec -> ErrY3NN call (w/ trackinfo) *******************TRIGTIMER" << std::endl;
 	    }else{
+	  std::cout << m_timerErrX3->isActive() << std::endl;
+	  m_timerErrX3->start();
 	      errors3PX=m_NetworkEstimateImpactPointErrorsX[2]->calculateNormalized(inputDataNew);
+	  m_timerErrX3->stop();
+	  std::cout << m_timerErrX3->elapsed() << " microsec -> ErrX3NN call (w/ trackinfo) *******************TRIGTIMER" << std::endl;
+	  std::cout << m_timerErrY3->isActive() << std::endl;
+	  m_timerErrY3->start();
 	      errors3PY=m_NetworkEstimateImpactPointErrorsY[2]->calculateNormalized(inputDataNew);
+	  m_timerErrY3->stop();
+	  std::cout << m_timerErrY3->elapsed() << " microsec -> ErrY3NN call (w/ trackinfo) *******************TRIGTIMER" << std::endl;
 	    }
 	  }
 	
