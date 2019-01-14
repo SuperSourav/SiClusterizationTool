@@ -155,9 +155,9 @@ namespace InDet
     //starting the trigtimer
     //std::cout << m_timer->isActive() << std::endl;
     //m_timer->start();
-    std::cout << "NnPixelClusterSplitProbTool call starts****************" << std::endl;
+    //std::cout << "NnPixelClusterSplitProbTool call starts****************" << std::endl;
       vectorOfProbs=m_NnClusterizationFactory->estimateNumberOfParticles(origCluster, trackParameters.associatedSurface(), trackParameters);
-    std::cout << "NnPixelClusterSplitProbTool call ends****************" << std::endl;
+    //std::cout << "NnPixelClusterSplitProbTool call ends****************" << std::endl;
     //stopping the trigtimer
     //m_timer->stop();
     //delete numNNTimer;

@@ -36,6 +36,11 @@
 #include "GeoPrimitives/GeoPrimitives.h"
 #include "EventPrimitives/EventPrimitives.h"
 
+//trigtimer service
+#include "TrigTimeAlgs/ITrigTimerSvc.h"
+
+ class TrigTimer; //forward declare trigtimer
+
  class TTrainedNetwork;
  class TH1;
  class ICoolHistSvc;
@@ -186,16 +191,27 @@ namespace InDet {
      
     
      TTrainedNetwork* m_NetworkEstimateNumberParticles;
+     TrigTimer* m_timerNum; //trigtimer
      TTrainedNetwork* m_NetworkEstimateNumberParticles_NoTrack;
 
      std::vector<TTrainedNetwork*> m_NetworkEstimateImpactPoints;
+     TrigTimer* m_timerPos1; //trigtimer
+     TrigTimer* m_timerPos2; //trigtimer
+     TrigTimer* m_timerPos3; //trigtimer
      std::vector<TTrainedNetwork*> m_NetworkEstimateImpactPoints_NoTrack;
-
      std::vector<TTrainedNetwork*> m_NetworkEstimateImpactPointErrorsX;
+     TrigTimer* m_timerErrX1; //trigtimer
+     TrigTimer* m_timerErrX2; //trigtimer
+     TrigTimer* m_timerErrX3; //trigtimer
      std::vector<TTrainedNetwork*> m_NetworkEstimateImpactPointErrorsX_NoTrack;
 
      std::vector<TTrainedNetwork*> m_NetworkEstimateImpactPointErrorsY;
+     TrigTimer* m_timerErrY1; //trigtimer
+     TrigTimer* m_timerErrY2; //trigtimer
+     TrigTimer* m_timerErrY3; //trigtimer
      std::vector<TTrainedNetwork*> m_NetworkEstimateImpactPointErrorsY_NoTrack;
+
+     ServiceHandle<ITrigTimerSvc> m_timerSvcALL; //trigtimer interface
 
      std::string m_coolFolder;
      std::string m_layerInfoHistogram;

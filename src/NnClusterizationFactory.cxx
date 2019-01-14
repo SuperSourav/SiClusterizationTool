@@ -381,7 +381,7 @@ if(m_doRunI){    return assembleInputRunI(  input, sizeX, sizeY    );       }els
     
     if (input==0)
     {
-      std::cout<< "NO NUMNN CHARGE INPUT *******************************************" << std::endl;
+      //std::cout<< "NO NUMNN CHARGE INPUT *******************************************" << std::endl;
       return std::vector<double>();
     }
     
@@ -398,13 +398,13 @@ if(m_doRunI){    return assembleInputRunI(  input, sizeX, sizeY    );       }els
       m_timerNum->start();
       resultNN = m_NetworkEstimateNumberParticles->calculateOutputValues(inputData);
       m_timerNum->stop();
-      std::cout << m_timerNum->elapsed() << " microsec -> numNN call (w/ trackinfo) *******************TRIGTIMER" << std::endl;
+      //std::cout << m_timerNum->elapsed() << " microsec -> numNN call (w/ trackinfo) *******************TRIGTIMER" << std::endl;
     }else{
       std::cout << m_timerNum->isActive() << std::endl;
       m_timerNum->start();
       resultNN = m_NetworkEstimateNumberParticles->calculateNormalized(inputData);
       m_timerNum->stop();
-      std::cout << m_timerNum->elapsed() << " microsec -> numNN call (w/ trackinfo) *******************TRIGTIMER" << std::endl;
+      //std::cout << m_timerNum->elapsed() << " microsec -> numNN call (w/ trackinfo) *******************TRIGTIMER" << std::endl;
     }
 
     ATH_MSG_VERBOSE(" Prob of n. particles (1): " << resultNN[0] << " (2): " << resultNN[1] << " (3): " << resultNN[2]);
@@ -471,6 +471,7 @@ if(m_doRunI){    return assembleInputRunI(  input, sizeX, sizeY    );       }els
     
     if (input==0)
     {
+       std::cout << "extimateposition input " << input << std::endl;
        return std::vector<Amg::Vector2D>();
     }
     
@@ -516,9 +517,15 @@ if(m_doRunI){    return assembleInputRunI(  input, sizeX, sizeY    );       }els
       if (!useTrackInfo)
       {
 	if(m_doRunI){
+	  m_timerPos1->start();
 	  position1P=m_NetworkEstimateImpactPoints_NoTrack[0]->calculateOutputValues(inputData);
+	  m_timerPos1->stop();
+	  std::cout << m_timerPos1->elapsed() << " microsec -> pos1NN call (w/o trackinfo) *******************TRIGTIMER" << std::endl;
 	}else{
+	  m_timerPos1->start();
 	  position1P=m_NetworkEstimateImpactPoints_NoTrack[0]->calculateNormalized(inputData);
+	  m_timerPos1->stop();
+	  std::cout << m_timerPos1->elapsed() << " microsec -> pos1NN call (w/o trackinfo) *******************TRIGTIMER" << std::endl;
 	}
       }
       else
@@ -528,13 +535,13 @@ if(m_doRunI){    return assembleInputRunI(  input, sizeX, sizeY    );       }els
 	  m_timerPos1->start();
 	  position1P=m_NetworkEstimateImpactPoints[0]->calculateOutputValues(inputData);
 	  m_timerPos1->stop();
-	  //std::cout << m_timerPos1->elapsed() << " microsec -> pos1NN call (w/ trackinfo) *******************TRIGTIMER" << std::endl;
+	  std::cout << m_timerPos1->elapsed() << " microsec -> pos1NN call (w/ trackinfo) *******************TRIGTIMER" << std::endl;
 	}else{
 	  std::cout << m_timerPos1->isActive() << std::endl;
 	  m_timerPos1->start();
 	  position1P=m_NetworkEstimateImpactPoints[0]->calculateNormalized(inputData);
 	  m_timerPos1->stop();
-	  //std::cout << m_timerPos1->elapsed() << " microsec -> pos1NN call (w/ trackinfo) *******************TRIGTIMER" << std::endl;
+	  std::cout << m_timerPos1->elapsed() << " microsec -> pos1NN call (w/ trackinfo) *******************TRIGTIMER" << std::endl;
 	}
       }
 

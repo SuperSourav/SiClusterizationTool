@@ -226,10 +226,12 @@ std::vector<InDet::PixelClusterParts> InDet::NnPixelClusterSplitter::splitCluste
   if (nParticles==1)
   {
     std::vector<Amg::MatrixX> errorMatrix;
+    std::cout << "NnPixelClusterSplitter POS1 begins **************" << std::endl;
     std::vector<Amg::Vector2D> localPosition=m_NnClusterizationFactory->estimatePositions(origCluster,
                                                                                                beamSpotPosition,
                                                                                                errorMatrix,
                                                                                                1);
+    std::cout << "NnPixelClusterSplitter POS1 ends **************" << std::endl;
 
     if (errorMatrix.size()!=1 || localPosition.size()!=1)
     {
