@@ -108,7 +108,7 @@ namespace InDet
 
     if (!m_useBeamSpotInfo) beamSpotPosition=Amg::Vector3D(0,0,0);
 
-    std::vector<double> vectorOfProbs=m_NnClusterizationFactory->estimateNumberOfParticles(origCluster,beamSpotPosition);
+    std::vector<double> vectorOfProbs=m_NnClusterizationFactory->estimateNumberOfParticles(origCluster,beamSpotPosition, 5, 7);
 
     ATH_MSG_VERBOSE(" Got splitProbability, size of vector: " << vectorOfProbs.size() );
 
@@ -156,7 +156,7 @@ namespace InDet
     //std::cout << m_timer->isActive() << std::endl;
     //m_timer->start();
     //std::cout << "NnPixelClusterSplitProbTool call starts****************" << std::endl;
-      vectorOfProbs=m_NnClusterizationFactory->estimateNumberOfParticles(origCluster, trackParameters.associatedSurface(), trackParameters);
+      vectorOfProbs=m_NnClusterizationFactory->estimateNumberOfParticles(origCluster, trackParameters.associatedSurface(), trackParameters, 5, 7);
     //std::cout << "NnPixelClusterSplitProbTool call ends****************" << std::endl;
     //stopping the trigtimer
     //m_timer->stop();
